@@ -3,6 +3,13 @@
 Copyright (c) 2021, brainswitchMedia
 All rights reserved.
 
+
+![3Dlines](https://githubusercontent.com/brainswitchMedia/Cinder-Samples/master/GPU3DLinesWithDepth/preview.png)
+
+![preview](https://user-images.githubusercontent.com/80468045/113015979-543b2080-917e-11eb-8b67-c938563a0c54.png)
+
+![Preview](https://raw.github.com/paulhoux/Cinder-Samples/master/GeometryShader/PREVIEW.png)
+
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
 
