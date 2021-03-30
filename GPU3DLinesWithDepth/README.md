@@ -1,9 +1,19 @@
-# GPU 3D Lines with depth
+# GPU Draw Perfect Lines in 3D with depth information
 
 ![3dline](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/GPU3DLinesWithDepth/3dline.png)
 
-Copyright (c) 2021, brainswitchMedia
-All rights reserved.
+This code is intended for use with the Cinder C++ library: http://libcinder.org
+  
+This code is heavily based on Paul Houx'S GeometryShader Sample:
+=> https://github.com/paulhoux/Cinder-Samples/tree/master/GeometryShader
+ 
+Depth calculation is based on opengl depthbuffer documentation:
+https://www.opengl.org/archives/resources/faq/technical/depthbuffer.htm
+ 
+and Sergejs Kovrovs's article:
+https://gist.github.com/kovrov/a26227aeadde77b78092b8a962bd1a91
+
+Copyright (c) 2021, brainswitchMedia. All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
