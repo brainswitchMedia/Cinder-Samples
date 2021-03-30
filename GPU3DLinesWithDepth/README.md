@@ -4,7 +4,7 @@
 
 This code is intended for use with the Cinder C++ library: http://libcinder.org
   
-This code is heavily based on Paul Houx'S GeometryShader Sample:
+This code is heavily based on Paul's GeometryShader Sample:
 => https://github.com/paulhoux/Cinder-Samples/tree/master/GeometryShader
  
 Depth calculation is based on opengl depthbuffer documentation:
