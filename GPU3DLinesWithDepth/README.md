@@ -1,6 +1,6 @@
 # GPU 3D Lines with depth
 
-![3dline](https://raw.github.com/brainswitchMedia/Cinder-Samples/master/GPU3DLinesWithDepth/preview2.png)
+![3dline](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/GPU3DLinesWithDepth/3dline.png)
 
 Copyright (c) 2021, brainswitchMedia
 All rights reserved.
