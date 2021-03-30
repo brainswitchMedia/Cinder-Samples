@@ -1,4 +1,4 @@
-# GPU Draw Perfect Lines in 3D with depth information
+# Draw Perfect Lines in 3D with geometry shader and depth information
 
 ![3dline](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/GPU3DLinesWithDepth/3dline.png)
 
