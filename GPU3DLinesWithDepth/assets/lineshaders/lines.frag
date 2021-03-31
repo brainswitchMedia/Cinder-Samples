@@ -15,7 +15,6 @@ in VertexData{
 
 float lineDepth;
 
-int test;
 out vec4 oColor;
 out vec4 oDepth;
 
