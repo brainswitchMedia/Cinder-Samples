@@ -1,10 +1,10 @@
 /*
- Copyright (c) 2010-2012, Paul Houx - All rights reserved.
+ Copyright (c) 2021, brainswitchMedia All rights reserved.
  This code is intended for use with the Cinder C++ library: http://libcinder.org
  
  Draw Perfect Lines in 3D with depth information
  
- This code is heavily based on Paul Houx'S GeometryShader Sample:
+ This code is heavily based on Paul's GeometryShader Sample:
  => https://github.com/paulhoux/Cinder-Samples/tree/master/GeometryShader
  
  Depth calculation  is based on opengl depthbuffer documentation:
@@ -61,17 +61,17 @@ protected:
     float                   mRadius;
     float                   mThickness;
     float                   mLimit;
-    int                     mDepthCalculationMode;
     
+    int                     mDepthCalculationMode;
+    float                   mObjectDrawingSizeCoef;
+    vec4                    mDefaultEdgeColor;
     std::vector<vec3>       mPoints;
     gl::GlslProgRef         mShader, mRenderObjectGlsl;
     gl::VboMeshRef          mVboMesh;
     gl::BatchRef            mBatchObjects, mBatchToScreenRect;
     ci::gl::FboRef          mObjectsFBO, mLineFBO;
-    ci::gl::Texture2dRef    mObjectsRenderFBO[ 1 ];
+    ci::gl::Texture2dRef    mObjectsRenderFBO[ 2 ];
     ci::gl::Texture2dRef    mLineRenderFBO[ 2 ];
-
-    vec4 mDefaultEdgeColor = vec4( 1.0f, 0.0f, 0.0f, 1.0f );
     
     CameraPersp mCam;
 };
@@ -88,9 +88,12 @@ void GPU3DLinesWithDepthApp::prepare( Settings *settings )
 void GPU3DLinesWithDepthApp::setup()
 {
     mRadius = 5.0f;
-    mThickness = 3.0f;
+    mThickness = 4.0f;
     mLimit = 0.75f;
     mDepthCalculationMode = 1;
+    mObjectDrawingSizeCoef = 0.99f;
+    mDefaultEdgeColor = vec4( 0.6f, 0.6f, 0.6f, 1.0f );
+
     mPoints.clear();
     
     loadLineShader( "lineshaders/lines1.geom" );
@@ -99,6 +102,7 @@ void GPU3DLinesWithDepthApp::setup()
     
     mCam = CameraPersp( 606, 400, 60.0f, 0.1f, 10.0f );
     mCam.lookAt( vec3( 5, 0, 5 ), vec3( 0 ) );
+    
 }
 
 
@@ -122,7 +126,7 @@ void GPU3DLinesWithDepthApp::update()
         vertices.push_back( 2.0f * (mPoints[0] - mPoints[1]) );
         
         for( std::vector<vec3>::iterator itr = mPoints.begin(); itr != mPoints.end(); ++itr )
-            vertices.push_back( *itr );
+        vertices.push_back( *itr );
         
         // next, add an adjacency vertex at the end
         size_t n = mPoints.size();
@@ -159,7 +163,7 @@ void GPU3DLinesWithDepthApp::update()
 
 void GPU3DLinesWithDepthApp::draw()
 {
-    // Render Stars Depth and star ColorID
+    // Render Objects color and Depth
     {
         const gl::ScopedFramebuffer scopedFrameBuffer( mObjectsFBO );
         const gl::ScopedViewport scopedViewport( ivec2( 0 ), mObjectsFBO->getSize() );
@@ -172,8 +176,9 @@ void GPU3DLinesWithDepthApp::draw()
         mBatchObjects->getGlslProg()->uniform( "radius", 1.0f );
         mBatchObjects->draw();
         
-       if( mDepthCalculationMode != 3 && mShader && mVboMesh) {
-            //const gl::ScopedTextureBind scopedTextureBind0( mObjectsFBO->getDepthTexture(), 0 );
+        // Render lines
+        if( mDepthCalculationMode != 3 && mShader && mVboMesh)
+        {
             gl::ScopedGlslProg shader( mShader );
             mShader->uniform( "uSamplerObjectsDepth", 0 );
             mShader->uniform( "WIN_SCALE", vec2( getWindowSize() ) ); // casting to vec2 is mandatory!
@@ -186,37 +191,56 @@ void GPU3DLinesWithDepthApp::draw()
         }
     }
     
-    // Render lines
+    
     if ( mDepthCalculationMode == 3 )
     {
-        const gl::ScopedFramebuffer scopedFrameBuffer( mLineFBO );
-        const gl::ScopedViewport scopedViewport( ivec2( 0 ), mLineFBO->getSize() );
-        const static GLenum buffers[] = {
-            GL_COLOR_ATTACHMENT0,
-            GL_COLOR_ATTACHMENT1,
-        };
+        // Render lines
+        {
+            const gl::ScopedFramebuffer scopedFrameBuffer( mLineFBO );
+            const gl::ScopedViewport scopedViewport( ivec2( 0 ), mLineFBO->getSize() );
+            const static GLenum buffers[] = {
+                GL_COLOR_ATTACHMENT0,
+                GL_COLOR_ATTACHMENT1,
+            };
         
-        gl::drawBuffers( 2, buffers );
-        gl::clear();
-        // Set color to white for the depth attachment
-        static const float white[] = { 1, 1, 1, 1 };
-        glClearBufferfv(GL_COLOR, 1, white);
+            gl::drawBuffers( 2, buffers );
+            gl::clear();
+            // Set color to white for the depth attachment
+            static const float white[] = { 1, 1, 1, 1 };
+            glClearBufferfv(GL_COLOR, 1, white);
         
-        const gl::ScopedMatrices scopedMatrices;
-        gl::setMatrices( mCam );
-        gl::enableDepthWrite();
-        gl::enableDepthRead();
-        if( mShader && mVboMesh ) {
-            const gl::ScopedTextureBind scopedTextureBind0( mObjectsFBO->getDepthTexture(), 0 );
-            gl::ScopedGlslProg shader( mShader );
-            mShader->uniform( "uSamplerObjectsDepth", 0 );
-            mShader->uniform( "WIN_SCALE", vec2( getWindowSize() ) ); // casting to vec2 is mandatory!
-            mShader->uniform( "MITER_LIMIT", mLimit );
-            mShader->uniform( "THICKNESS", mThickness );
-            mShader->uniform( "zFar", mCam.getFarClip());
-            mShader->uniform( "zNear", mCam.getNearClip());
-            mShader->uniform( "depthMode", mDepthCalculationMode );
-            gl::draw( mVboMesh );
+            const gl::ScopedMatrices scopedMatrices;
+            gl::setMatrices( mCam );
+            gl::enableDepthWrite();
+            gl::enableDepthRead();
+        
+            if( mShader && mVboMesh )
+            {
+                const gl::ScopedTextureBind scopedTextureBind0( mObjectsFBO->getDepthTexture(), 0 );
+                gl::ScopedGlslProg shader( mShader );
+                mShader->uniform( "uSamplerObjectsDepth", 0 );
+                mShader->uniform( "WIN_SCALE", vec2( getWindowSize() ) ); // casting to vec2 is mandatory!
+                mShader->uniform( "MITER_LIMIT", mLimit );
+                mShader->uniform( "THICKNESS", mThickness );
+                mShader->uniform( "zFar", mCam.getFarClip());
+                mShader->uniform( "zNear", mCam.getNearClip());
+                mShader->uniform( "depthMode", mDepthCalculationMode );
+                gl::draw( mVboMesh );
+            }
+        }
+        
+        // Render Object color
+        {
+            const gl::ScopedFramebuffer scopedFrameBuffer( mObjectsFBO );
+            const gl::ScopedViewport scopedViewport( ivec2( 0 ), mObjectsFBO->getSize() );
+            gl::drawBuffer( GL_COLOR_ATTACHMENT1 );
+            gl::clear();
+            const gl::ScopedMatrices scopedMatrices;
+            gl::setMatrices( mCam );
+            gl::enableDepthWrite();
+            gl::enableDepthRead();
+            mBatchObjects->getGlslProg()->uniform( "radius", mObjectDrawingSizeCoef );
+            mBatchObjects->draw();
         }
     }
     
@@ -230,7 +254,10 @@ void GPU3DLinesWithDepthApp::draw()
         gl::clear();
         gl::disableDepthRead();
         gl::disableDepthWrite();
-        const gl::ScopedTextureBind scopedTextureBind0( mObjectsRenderFBO[0], 0 );
+        
+        if ( mDepthCalculationMode == 3 ) mObjectsRenderFBO[1]->bind(0);
+        else mObjectsRenderFBO[0]->bind(0);
+        
         const gl::ScopedTextureBind scopedTextureBind1( mLineRenderFBO[0], 1 );
         const gl::ScopedTextureBind scopedTextureBind2( mObjectsFBO->getDepthTexture(), 2 );
         const gl::ScopedTextureBind scopedTextureBind3( mLineRenderFBO[1], 3 );
@@ -238,6 +265,9 @@ void GPU3DLinesWithDepthApp::draw()
         mBatchToScreenRect->getGlslProg()->uniform( "zNear", mCam.getNearClip());
         mBatchToScreenRect->getGlslProg()->uniform( "depthMode", mDepthCalculationMode );
         mBatchToScreenRect->draw();
+        
+        if ( mDepthCalculationMode == 3 ) mObjectsRenderFBO[1]->unbind(0);
+        else mObjectsRenderFBO[0]->unbind(0);
     }
 }
 
@@ -246,52 +276,61 @@ void GPU3DLinesWithDepthApp::keyDown( KeyEvent event )
 {
     switch( event.getCode() ) {
         case KeyEvent::KEY_ESCAPE:
-            quit();
-            break;
+        quit();
+        break;
         case KeyEvent::KEY_SPACE:
-            mPoints.clear();
-            // invalidate mesh
-            mVboMesh.reset();
-            break;
+        mPoints.clear();
+        // invalidate mesh
+        mVboMesh.reset();
+        break;
         case KeyEvent::KEY_m:
-            if( mThickness > 1.0f )
-                mThickness -= 1.0f;
-            break;
+        if( mThickness > 1.0f )
+        mThickness -= 1.0f;
+        break;
         case KeyEvent::KEY_n:
-            if( mThickness < 100.0f )
-                mThickness += 1.0f;
-            break;
+        if( mThickness < 100.0f )
+        mThickness += 1.0f;
+        break;
         case KeyEvent::KEY_EQUALS: // For Macs without a keypad or a plus key
-            if( !event.isShiftDown() ) {
-                break;
-            }
+        if( !event.isShiftDown() ) {
+            break;
+        }
         case KeyEvent::KEY_PLUS:
         case KeyEvent::KEY_KP_PLUS:
-            if( mLimit < 1.0f )
-                mLimit += 0.1f;
-            break;
+        if( mLimit < 1.0f )
+        mLimit += 0.1f;
+        break;
         case KeyEvent::KEY_MINUS:
         case KeyEvent::KEY_KP_MINUS:
-            if( mLimit > -1.0f )
-                mLimit -= 0.1f;
-            break;
+        if( mLimit > -1.0f )
+        mLimit -= 0.1f;
+        break;
         case KeyEvent::KEY_1:
-            mDepthCalculationMode = 1;
-            break;
+        mDepthCalculationMode = 1;
+        break;
         case KeyEvent::KEY_2:
-            mDepthCalculationMode = 2;
-            break;
+        mDepthCalculationMode = 2;
+        break;
         case KeyEvent::KEY_3:
-            mDepthCalculationMode = 3;
-            break;
+        mDepthCalculationMode = 3;
+        break;
+        case KeyEvent::KEY_p:
+        if( mObjectDrawingSizeCoef < 1.0f )
+        mObjectDrawingSizeCoef += 0.01f;
+        break;
+        case KeyEvent::KEY_o:
+        if( mObjectDrawingSizeCoef > 0.01f )
+        mObjectDrawingSizeCoef -= 0.01f;
+        break;
+
         case KeyEvent::KEY_F7:
-            loadLineShader( "lineshaders/lines1.geom" );
-            break;
+        loadLineShader( "lineshaders/lines1.geom" );
+        break;
         case KeyEvent::KEY_F8:
-            loadLineShader( "lineshaders/lines2.geom" );
-            break;
+        loadLineShader( "lineshaders/lines2.geom" );
+        break;
         default:
-            break;
+        break;
     }
 }
 
@@ -324,10 +363,16 @@ void GPU3DLinesWithDepthApp::resize()
                                                        .minFilter( GL_LINEAR )
                                                        .wrap( GL_CLAMP_TO_EDGE )
                                                        .dataType( GL_FLOAT ));
-        
+        mObjectsRenderFBO[ 1 ] = gl::Texture2d::create( sz.x, sz.y, gl::Texture2d::Format()
+                                                       .internalFormat( GL_RGB32F_ARB )
+                                                       .magFilter( GL_LINEAR )
+                                                       .minFilter( GL_LINEAR )
+                                                       .wrap( GL_CLAMP_TO_EDGE )
+                                                       .dataType( GL_FLOAT ));
         gl::Fbo::Format fboFormat;
         fboFormat.depthTexture( depthTextureFormat );
         fboFormat.attachment( GL_COLOR_ATTACHMENT0, mObjectsRenderFBO[ 0 ] );
+        fboFormat.attachment( GL_COLOR_ATTACHMENT1, mObjectsRenderFBO[ 1 ] );
         
         mObjectsFBO = gl::Fbo::create( sz.x, sz.y, fboFormat );
         const gl::ScopedFramebuffer scopedFramebuffer( mObjectsFBO );
@@ -402,19 +447,12 @@ void GPU3DLinesWithDepthApp::createBatches()
     gl::VboMeshRef  rect			= gl::VboMesh::create( geom::Rect() );
     gl::GlslProgRef composite       = gl::GlslProg::create( loadAsset( "pass_through.vert" ), loadAsset( "composite.frag" ) );
     mBatchToScreenRect              = gl::Batch::create( rect, composite );
-    mBatchToScreenRect->getGlslProg()->uniform( "uSamplerText", 0 );
+    mBatchToScreenRect->getGlslProg()->uniform( "uObjectsText", 0 );
     mBatchToScreenRect->getGlslProg()->uniform( "uLineText", 1 );
     mBatchToScreenRect->getGlslProg()->uniform( "uObjectsDepthText", 2 );
     mBatchToScreenRect->getGlslProg()->uniform( "uLineDepthText", 3 );
-
+    
 }
 
 
 CINDER_APP( GPU3DLinesWithDepthApp, RendererGl( RendererGl::Options().msaa( 16 ) ), &GPU3DLinesWithDepthApp::prepare )
-
-
-
-
-
-
-

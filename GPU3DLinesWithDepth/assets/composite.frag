@@ -37,8 +37,8 @@ void main( void )
         vec3 objectsColor = objectsText;
         float depthDiff = lineDepth - objectsDepth;
         if( depthDiff < 0.000001 ) objectsColor = vec3(0.0, 0.0, 0.0);
-        oColor		= vec4( lineText + objectsColor, 1.0);
-
+        oColor = vec4( lineText + objectsColor, 1.0);
+        
         // Depth buffers test
         // Uncomment this lines to visualize depth components
         //float lindepth1 = LinearizeDepth(objectsDepth)/zFar;

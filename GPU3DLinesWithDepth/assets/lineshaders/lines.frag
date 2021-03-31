@@ -6,8 +6,8 @@ uniform float       zNear;
 uniform int         depthMode;
 
 in VertexData{
-	vec2    mTexCoord;
-	vec4    mColor;
+    vec2    mTexCoord;
+    vec4    mColor;
     vec4    mModelViewVertex;
     vec4    mVertex;
     float   mDepth;
@@ -32,8 +32,8 @@ void main(void)
     if ( depthMode == 1 )
     {
         lineDepth = 0.5 * ( zFar + zNear ) / zDiff + 0.5
-                    + ( VertexIn.mModelViewVertex.w / VertexIn.mModelViewVertex.z )
-                    * zFar * zNear / zDiff;
+        + ( VertexIn.mModelViewVertex.w / VertexIn.mModelViewVertex.z )
+        * zFar * zNear / zDiff;
         gl_FragDepth = lineDepth;
     }
     // Depth calculation in vertex shader, using gl_FragDepth
@@ -56,8 +56,8 @@ void main(void)
         if( depthDiff < 0.000001 ) discard;  // Discard method
     }
     
-	oColor.rgb = color;
+    oColor.rgb = color;
     oColor.a = VertexIn.mColor.a;
     oDepth = vec4( lineDepth, lineDepth, lineDepth, 1.0 );
-
+    
 }
