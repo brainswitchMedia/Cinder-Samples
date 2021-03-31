@@ -64,6 +64,7 @@ protected:
     
     int                     mDepthCalculationMode;
     float                   mObjectDrawingSizeCoef;
+    
     vec4                    mDefaultEdgeColor;
     std::vector<vec3>       mPoints;
     gl::GlslProgRef         mShader, mRenderObjectGlsl;
