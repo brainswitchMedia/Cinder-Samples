@@ -14,8 +14,8 @@ and Sergejs Kovrovs's article:
 https://gist.github.com/kovrov/a26227aeadde77b78092b8a962bd1a91
 
 This sample shows 2 depth calculation methods with diferent rendering results. 
-* The first use gl_FragDepth and the Z-Buffer.
-* In the other the depth calculation is done manualy.   
+* The first and the second one use gl_FragDepth and the Z-Buffer.
+* In the third one the depth calculation is done manualy.   
 
 ----------------------------------------------------------------------------------
 
