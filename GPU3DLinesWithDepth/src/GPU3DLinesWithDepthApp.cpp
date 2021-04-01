@@ -86,7 +86,7 @@ protected:
     ci::gl::Texture2dRef    mObjectsRenderFBO[ 2 ];
     ci::gl::Texture2dRef    mLineRenderFBO[ 2 ];
     
-    CameraPersp mCam;
+    CameraPersp             mCam;
 };
 
 
