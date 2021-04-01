@@ -62,7 +62,19 @@ protected:
     float                   mThickness;
     float                   mLimit;
     
+    /* Its possible to test 3 depth calculation modes
+    1 and 2 use gl_FragDepth and the Z-Buffer
+    3 use a manual depth calculation commented in the code */
+    
     int                     mDepthCalculationMode;
+    
+    /* mObjectDrawingSizeCoef is used with mDepthCalculationMode 3
+    Object drawing size can be adjusted manually when the line thickness has been modified
+    Test it yourself to see what happen:
+    1 - Choose mDepthCalculationMode = 3
+    2 - Increase the line thickness until you see light color areas between the line and the sphere
+    3 - Decrease the sphere size until the bug disappears */
+    
     float                   mObjectDrawingSizeCoef;
     
     vec4                    mDefaultEdgeColor;
@@ -81,7 +93,7 @@ protected:
 void GPU3DLinesWithDepthApp::prepare( Settings *settings )
 {
     settings->setTitle( "Drawing smooth lines using a geometry shader" );
-    settings->setWindowSize( 640, 640 );
+    settings->setWindowSize( 1280, 570 );
     settings->setHighDensityDisplayEnabled();
 }
 
@@ -92,6 +104,7 @@ void GPU3DLinesWithDepthApp::setup()
     mThickness = 4.0f;
     mLimit = 0.75f;
     mDepthCalculationMode = 1;
+    
     mObjectDrawingSizeCoef = 0.99f;
     mDefaultEdgeColor = vec4( 0.6f, 0.6f, 0.6f, 1.0f );
 
@@ -103,7 +116,6 @@ void GPU3DLinesWithDepthApp::setup()
     
     mCam = CameraPersp( 606, 400, 60.0f, 0.1f, 10.0f );
     mCam.lookAt( vec3( 5, 0, 5 ), vec3( 0 ) );
-    
 }
 
 
@@ -445,13 +457,15 @@ void GPU3DLinesWithDepthApp::createBatches()
     }
     
     // To screen
-    gl::VboMeshRef  rect			= gl::VboMesh::create( geom::Rect() );
-    gl::GlslProgRef composite       = gl::GlslProg::create( loadAsset( "pass_through.vert" ), loadAsset( "composite.frag" ) );
-    mBatchToScreenRect              = gl::Batch::create( rect, composite );
-    mBatchToScreenRect->getGlslProg()->uniform( "uObjectsText", 0 );
-    mBatchToScreenRect->getGlslProg()->uniform( "uLineText", 1 );
-    mBatchToScreenRect->getGlslProg()->uniform( "uObjectsDepthText", 2 );
-    mBatchToScreenRect->getGlslProg()->uniform( "uLineDepthText", 3 );
+    {
+        gl::VboMeshRef  rect			= gl::VboMesh::create( geom::Rect() );
+        gl::GlslProgRef composite       = gl::GlslProg::create( loadAsset( "pass_through.vert" ), loadAsset( "composite.frag" ) );
+        mBatchToScreenRect              = gl::Batch::create( rect, composite );
+        mBatchToScreenRect->getGlslProg()->uniform( "uObjectsText", 0 );
+        mBatchToScreenRect->getGlslProg()->uniform( "uLineText", 1 );
+        mBatchToScreenRect->getGlslProg()->uniform( "uObjectsDepthText", 2 );
+        mBatchToScreenRect->getGlslProg()->uniform( "uLineDepthText", 3 );
+    }
     
 }
 
