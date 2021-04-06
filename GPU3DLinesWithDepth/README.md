@@ -13,7 +13,7 @@ https://www.opengl.org/archives/resources/faq/technical/depthbuffer.htm
 and Sergejs Kovrovs's article:
 https://gist.github.com/kovrov/a26227aeadde77b78092b8a962bd1a91
 
-This sample shows 2 depth calculation methods with diferent rendering results. 
+This sample shows 2 depth calculation methods with different rendering results. 
 * The first one and the second one use gl_FragDepth and the Z-Buffer.
 * In the third one the depth calculation is done manualy.   
 
