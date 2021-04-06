@@ -1,6 +1,7 @@
 /*
  Copyright (c) 2021, brainswitchMedia All rights reserved.
- This code is intended for use with the Cinder C++ library: http://libcinder.org
+ This code is intended for use with the Cinder C++ library: http://libcinder.org 
+ Programmed with Cinder v0.9.1
  
  Draw Perfect Lines in 3D with depth information
  
