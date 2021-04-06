@@ -2,7 +2,7 @@
 
 ![3dline](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/GPU3DLinesWithDepth/3dline.png)
 
-This code is intended for use with the Cinder C++ library: http://libcinder.org
+This code is intended for use with the Cinder C++ library: http://libcinder.org (coded with Cinder v0.9.1 )
   
 This code is heavily based on Paul's GeometryShader Sample:
 => https://github.com/paulhoux/Cinder-Samples/tree/master/GeometryShader
