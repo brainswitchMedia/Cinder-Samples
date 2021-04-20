@@ -7,6 +7,7 @@ This code is intended for use with the Cinder C++ library: http://libcinder.org 
 This Sample is a real-time beat tracker.
 
 This algorithm is based on the following sources:
+
 http://archive.gamedev.net/archive/reference/programming/features/beatdetection/
 
 https://community.sw.siemens.com/s/article/octaves-in-human-hearing
