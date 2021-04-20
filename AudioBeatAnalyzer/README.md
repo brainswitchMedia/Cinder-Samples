@@ -16,11 +16,11 @@ This sample provides a logarithmic repartition of frequencies in 12 subbands and
 The beat detection is based on a variance calculation.
 
 With this sample it is possible to:
-* Adjust the source signal with a Gain
-* Filter the source signal with a lowShelf filter if low frequencies are to powerfull
+* Adjust the source signal with Gain
+* Filter the source signal with a LowShelf Filter if bass frequencies are too loud
 * Smooth the signal in the fft or after the fft
 * Extract up to 4 beats and their energy by selecting different bands of frequencies
-* Adjust the beat sensibilty detection with a Threshold and a sensibilty coeficient
+* Adjust the beat sensibilty detection with a Threshold and a sensibilty Coeficient
 
 The algorithm could be optmized by increasing the number of subbands and/or make the source signal pass through a derivative filter
 
