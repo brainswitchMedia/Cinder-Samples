@@ -1,10 +1,10 @@
-# Draw perfect lines in 3D with geometry shader and depth calculation
+# Real-time beat detection algorithm
 
 ![AudioBeatAnalyzer](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/AudioBeatAnalyzer/AudioBeatAnalyzer.png)
 
 This code is intended for use with the Cinder C++ library: http://libcinder.org (coded with Cinder v0.9.1)
 
-This Sample is a simple real-time beat tracker.
+This Sample is a real-time beat tracker.
 
 This algorithm is based on the following sources:
 http://archive.gamedev.net/archive/reference/programming/features/beatdetection/
