@@ -12,8 +12,8 @@ http://archive.gamedev.net/archive/reference/programming/features/beatdetection/
 
 https://community.sw.siemens.com/s/article/octaves-in-human-hearing
 
-This sample provides a logarithmic repartition of frequencies in 12 subbands and a simple spectrum repartition
-The beat detection is based on a variance calculation
+This sample provides a logarithmic repartition of frequencies in 12 subbands and a simple spectrum repartition.
+The beat detection is based on a variance calculation.
 
 With this sample it is possible to:
 * Filter the source signal with a lowShelf filter if low frequencies are to powerfull
