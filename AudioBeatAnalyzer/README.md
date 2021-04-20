@@ -1,21 +1,25 @@
 # Draw perfect lines in 3D with geometry shader and depth calculation
 
-![3dline](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/GPU3DLinesWithDepth/3dline.png)
+![AudioBeatAnalyzer](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/AudioBeatAnalyzer/AudioBeatAnalyzer.png)
 
-This code is intended for use with the Cinder C++ library: http://libcinder.org
-  
-This code is heavily based on Paul's GeometryShader Sample:
-=> https://github.com/paulhoux/Cinder-Samples/tree/master/GeometryShader
- 
-Depth calculation is based on opengl depthbuffer documentation:
-https://www.opengl.org/archives/resources/faq/technical/depthbuffer.htm
- 
-and Sergejs Kovrovs's article:
-https://gist.github.com/kovrov/a26227aeadde77b78092b8a962bd1a91
+This code is intended for use with the Cinder C++ library: http://libcinder.org (coded with Cinder v0.9.1)
 
-This sample shows 2 depth calculation methods with diferent rendering results. 
-* The first one and the second one use gl_FragDepth and the Z-Buffer.
-* In the third one the depth calculation is done manualy.   
+This Sample is a simple real-time beat tracker.
+
+This algorithm is based on the following sources:
+http://archive.gamedev.net/archive/reference/programming/features/beatdetection/
+https://community.sw.siemens.com/s/article/octaves-in-human-hearing
+
+This sample provides a logarithmic repartition of frequencies in 12 subbands and a simple spectrum repartition
+The beat detection is based on a variance calculation
+
+With this sample it is possible to:
+* Filter the source signal with a lowShelf filter if low frequencies are to powerfull
+* Smooth the signal in the fft or after the fft
+* Extract up to 4 beats and their energy by selecting different bands of frequencies
+* Adjust the beat sensibilty detection with a Threshold and a sensibilty coeficient
+
+The algorithm could be optmized by increasing the number of subbands and/or make the source signal pass through a derivative filter
 
 ----------------------------------------------------------------------------------
 
