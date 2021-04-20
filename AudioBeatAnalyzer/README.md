@@ -9,6 +9,7 @@ This Sample is a real-time beat tracker.
 This algorithm is based on the following sources:
 
 http://archive.gamedev.net/archive/reference/programming/features/beatdetection/
+
 https://community.sw.siemens.com/s/article/octaves-in-human-hearing
 
 This sample provides a logarithmic repartition of frequencies in 12 subbands and a simple spectrum repartition
