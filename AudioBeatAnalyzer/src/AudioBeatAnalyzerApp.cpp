@@ -84,16 +84,14 @@ public:
     gl::BatchRef                    mBatchRect;
     gl::VertBatchRef                mBatchLines;
     vector<float>                   mMagnitudes;
-    bool                            mblink = false;
-    float                           mBlinkCounter = 0.0f;
     
     // PARAM ////////////////////////////////////////////////////
     params::InterfaceGlRef          mParams;
     float                           mFrameRate = 0.0f;
-    float                           mBandGain = 200.0f;
-    float                           mSpectrumGain = 400.0f;
+    float                           mBandGain = 100.0f;
+    float                           mSpectrumGain = 300.0f;
     double                          mBandSmoothingFactor = 0.0;         // smooth in fft for bands energy
-    double                          mBandSmoothing = 0.8;               // smooth bands Energy after fft, better to set at 1.0 if mBandSmoothingFactor < 1.0 to not smooth 2 times
+    double                          mBandSmoothing = 0.0;               // smooth bands Energy after fft, better to set at 1.0 if mBandSmoothingFactor < 1.0 to not smooth 2 times
     double                          mSpectrumSmoothingFactor = 0.7;     // smooth in fft for spectrum energy
     
     // Beat and magnitude calculation
@@ -111,10 +109,6 @@ public:
     // Beat and Magnitude Selection
     int32_t                         mBeat = Beat0;
     int32_t                         mMagnitudeOutMode[4] = { Energy, Energy, Energy, Smoothed };
-    bool                            mActivateBeat0 = false;
-    bool                            mActivateBeat1 = false;
-    bool                            mActivateBeat2 = false;
-    
     
     // OFSTREAM //////////////////////////////////////////////////
     File                            mTxtFile;
@@ -157,59 +151,52 @@ void AudioBeatAnalyzerApp::setup()
     mParams->addSeparator();
     mParams->addParam( "Frame rate", &mFrameRate, "group=`Input`", true );
     mParams->addParam( "LowShelf Frequency", &mLowShelfFrequency, "min=-1.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Input`" );
-    mParams->addParam( "LowShelf Gain", &mLowShelfGain, "min=-50.0 max=50.0 step=1.0 keyIncr=q keyDecr=w group=`Input`" );
+    mParams->addParam( "LowShelf Gain", &mLowShelfGain, "min=-100.0 max=100.0 step=1.0 keyIncr=q keyDecr=w group=`Input`" );
     mParams->addParam( "Band Gain", &mBandGain, "min=0.0 max=1000.0 step=0.5 keyIncr=q keyDecr=w group=`Input`" );
     mParams->addParam( "Bands Smoothing Factor", &mBandSmoothingFactor, "min=0.0 max=1.0 step=0.1 keyIncr=q keyDecr=w group=`Input`" );
     mParams->addParam( "Smoothing Energy", &mBandSmoothing, "min=0.0 max=1.0 step=0.1 keyIncr=q keyDecr=w group=`Input`" );
-    mParams->addParam( "Spectrum Smoothing Factor", &mSpectrumSmoothingFactor, "min=0.0 max=1.0 step=0.1 keyIncr=q keyDecr=w group=`Input`" );
     
     mParams->addSeparator();
     mParams->addParam( "0 - Band", &mBand0, "min=0 max=10 step=1 keyIncr=q keyDecr=w group=`Band 0`" );
-    mParams->addParam( "0 - Magnitute Out Coef", &mMagnitudeOutCoef[0], "min=0.0 max=10.0 step=0.1 keyIncr=q keyDecr=w group=`Band 0`" );
-    mParams->addParam( "0 - BeatSensitivity Coef", &mBeatSensitivityCoef[0], "min=0.0 max=1000.0 step=0.1 keyIncr=q keyDecr=w group=`Band 0`" );
+    mParams->addParam( "0 - Magnitute Out Coef", &mMagnitudeOutCoef[0], "min=0.0 max=50.0 step=0.1 keyIncr=q keyDecr=w group=`Band 0`" );
+    mParams->addParam( "0 - BeatSensitivity Coef", &mBeatSensitivityCoef[0], "min=0.0 max=100.0 step=0.1 keyIncr=q keyDecr=w group=`Band 0`" );
     mParams->addParam( "0 - BeatThreshold", &mBeatThreshold[0], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 0`" );
-    mParams->addParam( "0 - Magn Decay", &mMagnDecay[0], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 0`" );
+    mParams->addParam( "0 - Magnitude Decay", &mMagnDecay[0], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 0`" );
     mParams->addParam( "0 - Magnitude Min", &mMagnitudeMin[0], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 0`" );
     mParams->addParam( "0 - Magnitude Max", &mMagnitudeMax[0], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 0`" );
     mParams->addParam( "0 - Magnitude Out Mode", magnitudeOutCalculationMode, &mMagnitudeOutMode[0], "keyDecr=a keyIncr=b group=`Band 0`" );
     
     mParams->addSeparator();
     mParams->addParam( "1 - Band", &mBand1, "min=0 max=10 step=1 keyIncr=q keyDecr=w group=`Band 1`" );
-    mParams->addParam( "1 - Magnitute Out Coef", &mMagnitudeOutCoef[1], "min=0.0 max=10.0 step=0.1 keyIncr=q keyDecr=w group=`Band 1`" );
-    mParams->addParam( "1 - BeatSensitivity Coef", &mBeatSensitivityCoef[1], "min=0.0 max=1000.0 step=0.1 keyIncr=q keyDecr=w group=`Band 1`" );
+    mParams->addParam( "1 - Magnitute Out Coef", &mMagnitudeOutCoef[1], "min=0.0 max=50.0 step=0.1 keyIncr=q keyDecr=w group=`Band 1`" );
+    mParams->addParam( "1 - BeatSensitivity Coef", &mBeatSensitivityCoef[1], "min=0.0 max=100.0 step=0.1 keyIncr=q keyDecr=w group=`Band 1`" );
     mParams->addParam( "1 - BeatThreshold", &mBeatThreshold[1], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 1`" );
-    mParams->addParam( "1 - Magn Decay", &mMagnDecay[1], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 1`" );
+    mParams->addParam( "1 - Magnitude Decay", &mMagnDecay[1], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 1`" );
     mParams->addParam( "1 - Magnitude Min", &mMagnitudeMin[1], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 1`" );
     mParams->addParam( "1 - Magnitude Max", &mMagnitudeMax[1], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 1`" );
     mParams->addParam( "1 - Magnitude Out Mode", magnitudeOutCalculationMode, &mMagnitudeOutMode[1], "keyDecr=a keyIncr=b group=`Band 1`" );
     
     mParams->addSeparator();
     mParams->addParam( "2 - Band", &mBand2, "min=0 max=10 step=1 keyIncr=q keyDecr=w group=`Band 2`" );
-    mParams->addParam( "2 - Magnitute Out Coef", &mMagnitudeOutCoef[2], "min=0.0 max=10.0 step=0.1 keyIncr=q keyDecr=w group=`Band 2`" );
-    mParams->addParam( "2 - BeatSensitivity Coef", &mBeatSensitivityCoef[2], "min=0.0 max=1000.0 step=0.1 keyIncr=q keyDecr=w group=`Band 2`" );
+    mParams->addParam( "2 - Magnitute Out Coef", &mMagnitudeOutCoef[2], "min=0.0 max=50.0 step=0.1 keyIncr=q keyDecr=w group=`Band 2`" );
+    mParams->addParam( "2 - BeatSensitivity Coef", &mBeatSensitivityCoef[2], "min=0.0 max=100.0 step=0.1 keyIncr=q keyDecr=w group=`Band 2`" );
     mParams->addParam( "2 - BeatThreshold", &mBeatThreshold[2], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 2`" );
-    mParams->addParam( "2 - Magn Decay", &mMagnDecay[2], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 2`" );
+    mParams->addParam( "2 - Magnitude Decay", &mMagnDecay[2], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 2`" );
     mParams->addParam( "2 - Magnitude Min", &mMagnitudeMin[2], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 2`" );
     mParams->addParam( "2 - Magnitude Max", &mMagnitudeMax[2], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Band 2`" );
     mParams->addParam( "2 - Magnitude Out Mode", magnitudeOutCalculationMode, &mMagnitudeOutMode[2], "keyDecr=a keyIncr=b group=`Band 2`" );
     
     mParams->addSeparator();
     mParams->addParam( "Spectrum Gain", &mSpectrumGain, "min=0.0 max=1000.0 step=0.5 keyIncr=q keyDecr=w group=`Spectrum Range`" );
+    mParams->addParam( "Spectrum Smoothing Factor", &mSpectrumSmoothingFactor, "min=0.0 max=1.0 step=0.1 keyIncr=q keyDecr=w group=`Spectrum Range`" );
     mParams->addParam( "Position", &mRange.position, "min=1 max=128 step=1 keyIncr=q keyDecr=w group=`Spectrum Range`" );
     mParams->addParam( "Range Width", &mRange.rangeWidth, "min=1 max=128 step=1 keyIncr=q keyDecr=w group=`Spectrum Range`" );
-    mParams->addParam( "3 - Magnitute Out Coef", &mMagnitudeOutCoef[3], "min=0.0 max=10.0 step=0.1 keyIncr=q keyDecr=w group=`Spectrum Range`" );
-    mParams->addParam( "3 - BeatSensitivity Coef", &mRange.sensitivityCoef, "min=0.0 max=1000.0 step=0.1 keyIncr=q keyDecr=w group=`Spectrum Range`" );
+    mParams->addParam( "3 - Magnitute Out Coef", &mMagnitudeOutCoef[3], "min=0.0 max=50.0 step=0.1 keyIncr=q keyDecr=w group=`Spectrum Range`" );
     mParams->addParam( "3 - BeatThreshold", &mRange.beatThreshold, "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Spectrum Range`" );
-    mParams->addParam( "3 - Magn Decay", &mMagnDecay[3], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Spectrum Range`" );
+    mParams->addParam( "3 - Magnitude Decay", &mMagnDecay[3], "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Spectrum Range`" );
     mParams->addParam( "3 - Magnitude Min", &mRange.magnitudeMin, "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Spectrum Range`" );
     mParams->addParam( "3 - Magnitude Max", &mRange.magnitudeMax, "min=0.0 max=1.0 step=0.01 keyIncr=q keyDecr=w group=`Spectrum Range`" );
     mParams->addParam( "3 - Magnitude Out Mode", magnitudeOutCalculationMode, &mMagnitudeOutMode[3], "keyDecr=a keyIncr=b group=`Spectrum Range`" );
-    
-    mParams->addSeparator();
-    mParams->addParam( "Beat", beat, &mBeat, "keyDecr=a keyIncr=b group=`Beat & EnergySelection`" );
-    mParams->addParam( "Activate beat 0", &mActivateBeat0 ).key( "0" ).group( "Beat & EnergySelection" );
-    mParams->addParam( "Activate beat 1", &mActivateBeat1 ).key( "1" ).group( "Beat & EnergySelection" );
-    mParams->addParam( "Activate beat 2", &mActivateBeat2 ).key( "2" ).group( "Beat & EnergySelection" );
     
     // Init drawind
     auto color = gl::ShaderDef().color();
@@ -287,9 +274,6 @@ void AudioBeatAnalyzerApp::update()
     
     // Other Parameters
     mFrameRate	= getAverageFps();
-    mBlinkCounter = cos( 2.0f * getElapsedSeconds() );
-    if ( mBlinkCounter < 0 ) mblink = true;
-    else mblink = false;
     
     // Ofstream
     recordAudio( mTxtFile );
@@ -420,7 +404,7 @@ void AudioBeatAnalyzerApp::initLogBands( int nbBands )
         mBands[i].active = true;
         mBands[i].beat = false;
         mBands[i].beatCounter = 11;
-        mBands[i].beatSensitivity = 0.04; // Default, must be adjusted depends on the number of bin in the Band
+        mBands[i].beatSensitivity = 0.05; // Default, must be adjusted depends on the number of bin in the Band
         mBands[i].bandEnergy = 0.0;
         mBands[i].bandMagnitude = 0.0;
         mBands[i].smoothBandMagnitude = 0.0;
@@ -458,7 +442,7 @@ void AudioBeatAnalyzerApp::initLogBands( int nbBands )
         }
         
         mBands[i-1].bandSize = bandSize;
-        mBands[i-1].beatSensitivity = 0.02/(double)bandSize;
+        mBands[i-1].beatSensitivity = 0.05/(double)bandSize;
         console() << " -- bandzise: " << bandSize << endl;
         //console() << "higher octave freq: " << nextSpanfreq << endl;
         spanFreq = nextSpanFreq;
@@ -496,9 +480,7 @@ void AudioBeatAnalyzerApp::initSpectrumRange( int nbBands )
     mRange.active = true;
     mRange.beat = false;
     mRange.beatCounter = 11;
-    mRange.beatSensitivity = 0.04;
-    mRange.sensitivityCoef = 1.0;
-    mRange.beatThreshold = 0.0;
+    mRange.beatThreshold = 0.1;
     mRange.rangeEnergy = 0.0;
     mRange.rangeMagnitude = 0.0;
     mRange.rangeMagnitudeCorrected = 0.0;
@@ -506,8 +488,8 @@ void AudioBeatAnalyzerApp::initSpectrumRange( int nbBands )
     mRange.magnitudeMin = 0.0;
     mRange.magnitudeMax = 1.0;
     mRange.magnDecay = 0.90;
-    mRange.position = 3;
-    mRange.rangeWidth = 7;
+    mRange.position = 50;
+    mRange.rangeWidth = 20;
     
     // Init BUFFERSIZE (43) history Buffer elements
     for ( int j = 0; j < BUFFERSIZE; j++ ) {
@@ -572,12 +554,13 @@ void AudioBeatAnalyzerApp::computeLogSoundEnergy( const vector<float> &magSpectr
             decay = mMagnDecay[2]; magnitudeMin = mMagnitudeMin[2];  magnitudeMax = mMagnitudeMax[2]; smoothed = mSmoothing[2]; magnitudeOutCalculationMode = mMagnitudeOutMode[2]; }
         
         // Only calculate beat and magnitudes for selected bands
+        // Minimum delay between 2 beats: 16.67 ms at framerate = 60 => 3600 bpm max for beat detection
         if ( i == mBand0 || i == mBand1 || i == mBand2 )
         {
             mBands[i].smoothBandMagnitude = mBands[i].smoothBandMagnitude * mBandSmoothing + bandEnergy * ( 1.0 - mBandSmoothing );
             
             // Beat calculation
-            if ( bandEnergy - ( sensibilityCoef * mBands[i].beatSensitivity ) > c * averageEnergy && bandEnergy > beatThreshold && mBands[i].beatCounter > 10 )
+            if ( bandEnergy - ( sensibilityCoef * mBands[i].beatSensitivity ) > c * averageEnergy && bandEnergy > beatThreshold )
             {
                 mBands[i].beat = true;
                 mBands[i].beatCounter = 0;
@@ -589,7 +572,6 @@ void AudioBeatAnalyzerApp::computeLogSoundEnergy( const vector<float> &magSpectr
                 mBands[i].bandMagnitude += easeOutExpo( mBands[i].beatCounter ) * mBands[i].bandEnergy;
             }
             
-            // Minimum delay between 2 beats: 16.67 ms at framerate = 60 => 3600 bpm max for beat detection
             if ( mBands[i].beatCounter < 11 )
                 mBands[i].beatCounter += 1;
             
@@ -624,7 +606,6 @@ void AudioBeatAnalyzerApp::computeSoundRange( const vector<float> &magSpectrum )
     if ( maxRange <= 0 )
         mRange.rangeWidth = mRange.rangeWidth + maxRange;
     
-    mRange.beatSensitivity = 0.02/(double)mRange.rangeWidth;
     computeRangeEnergy ( magSpectrum );
 }
 
@@ -658,7 +639,7 @@ void AudioBeatAnalyzerApp::computeRangeEnergy( const vector<float> &magSpectrum 
     
     mRange.smoothRangeMagnitude = rangeEnergy;
     
-    if ( rangeEnergy > c * averageEnergy && rangeEnergy > mRange.beatThreshold && mRange.beatCounter > 10 )
+    if ( rangeEnergy > c * averageEnergy && rangeEnergy > mRange.beatThreshold )
     {
         mRange.beat = true;
         mRange.beatCounter = 0;

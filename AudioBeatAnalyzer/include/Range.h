@@ -21,8 +21,6 @@ public:
     bool    active;
     bool    beat;
     int     beatCounter;
-    double	beatSensitivity;
-    double  sensitivityCoef;
     double  beatThreshold;
     double  rangeEnergy;
     double  rangeMagnitude;
