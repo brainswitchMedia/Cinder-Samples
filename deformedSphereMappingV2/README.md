@@ -1,45 +1,20 @@
-# A Deformed sphere with trails and transformed feedback curl noise particles system
+# A Deformed sphere with trails and transform feedback curl noise soft particles system
 
 ![deformedSphereMapping](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/deformedSphereMappingV2/deformedSphereMappingV2.png)
 
 This code is intended for use with the Cinder C++ library: http://libcinder.org (coded with Cinder v0.9.1)
 
-This Sample is a real-time beat tracker.
+This Sample is a visual animation that was at the origin just a test for transform feedback and trails. I decided to share it as it is, the code is messy and not optimised. Light shader are not realistic and certainly not true but it is not intended to reproduce the reality. I removed the audio analysis part.
 
-This algorithm is based on the following sources:
+Here is the video: https://youtu.be/NGrln2cJkeA 
 
-http://archive.gamedev.net/archive/reference/programming/features/beatdetection/
+I would says 2 things are ok for use:
 
-https://community.sw.siemens.com/s/article/octaves-in-human-hearing
+* The transform feedback curl noise system that use a geometry shader ( it is a gpu dying soft particles system )  
 
-This sample provides a logarithmic repartition of frequencies in 12 subbands and a simple spectrum repartition.
-The beat detection is based on a variance calculation.
+* The trail part but it should be optimised
 
-With this sample it is possible to:
-
-* Adjust the source signal with Gain
-    ex:
-    Band Gain = 20
-
-* Filter the source signal with a LowShelf Filter if bass frequencies are too loud
-    ex:
-    LowShelf Frequency = 0.001
-    LowShelf Gain = -20
-
-* Smooth the signal in the fft or after the fft
-    ex:
-    Band Smoothing Factor = 0.1 for soothing in the fft spectrum
-    Band Smoothing Energy = 0.1 for soothing after the fft
-
-* Adjust the beat sensitivity detection with a Threshold and a Sensitivity Coeficient
-    ex:
-    BeatSensitivity Coef = 2 // 1 does not modify the sensitivity and if coef > 1 the sensitivity decreases
-    BeatTreshold = 0.15
-
-* Extract up to 4 beats and their energy by selecting different bands of frequencies
-
-
-The algorithm could be optmized by increasing the number of subbands and/or make the source signal pass through a derivative filter
+Everything else is aproximativ and fast coded. 
 
 ----------------------------------------------------------------------------------
 
