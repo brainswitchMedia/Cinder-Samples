@@ -4,7 +4,7 @@
 
 This code is intended for use with the Cinder C++ library: http://libcinder.org (coded with Cinder v0.9.1)
 
-This Sample is a visual animation that was at the origin just a test for transform feedback and trails. I decided to share it as it is, the code is messy and not optimised. Light shader are not realistic and certainly not true but it is not intended to reproduce the reality. I removed the audio analysis part.
+This Sample is a visual animation that was at the origin just a test for transform feedback and trails. I decided to share it as it is, the code is messy and not optimised. Light shaders are not realistic and certainly not true but it is not intended to reproduce the reality. I removed the audio analysis part.
 
 Here is the video: https://youtu.be/NGrln2cJkeA 
 
