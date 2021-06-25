@@ -1,6 +1,6 @@
-# Real-time beat detection algorithm
+# A Deformed sphere with trails and transformed feedback curl noise particles system
 
-![AudioBeatAnalyzer](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/AudioBeatAnalyzer/AudioBeatAnalyzer.png)
+![deformedSphereMapping](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/deformedSphereMappingV2/deformedSphereMappingV2.png)
 
 This code is intended for use with the Cinder C++ library: http://libcinder.org (coded with Cinder v0.9.1)
 
