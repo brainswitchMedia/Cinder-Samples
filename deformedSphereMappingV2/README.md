@@ -8,7 +8,7 @@ This Sample is a visual animation that was at the origin just a test for transfo
 
 Here is the video: https://youtu.be/NGrln2cJkeA 
 
-I would says 2 things are ok for use:
+I would say 2 things are ok for use:
 
 * The transform feedback curl noise system that use a geometry shader ( it is a gpu dying soft particles system )  
 
