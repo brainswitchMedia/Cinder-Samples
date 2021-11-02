@@ -17,7 +17,7 @@ https://vimeo.com/637163233/20feb47578
 * An anti-aliasing fxaa shader
 
 **Notes:**  
-I could not calculate normals in the geometry shader with the cubemap projection. I should use 6 2d textures insted of cube map lookups but I had no time to try it
+I could not calculate normals in the geometry shader with cubemap projections. I should use 6 2d textures insted of cube map lookups but I had no time to try it
 A good link explaining this issue:  
 https://gamedev.stackexchange.com/questions/66642/tangent-on-generated-sphere
 
