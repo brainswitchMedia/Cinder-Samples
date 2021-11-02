@@ -20,7 +20,8 @@ This Sample contains:
 
 Notes:
 I could not calculate normals in the geometry shader with the cubemap projection. I should use 6 2d textures insted of cube map lookups but I had no time to try it
-A good link explaining this issue: https://gamedev.stackexchange.com/questions/66642/tangent-on-generated-sphere
+A good link explaining this issue:
+https://gamedev.stackexchange.com/questions/66642/tangent-on-generated-sphere
 
 The tessellation can be manually modified:
 KEY_LEFT : mInnerLevel--
