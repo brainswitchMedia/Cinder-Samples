@@ -10,7 +10,7 @@ https://youtu.be/IT7WLxrKGlQ
 
 https://vimeo.com/637163233/20feb47578
 
-This Sample contains:
+**This Sample contains:**  
 * A spherisation source code in the CubeSphere.cpp file
 * A tessellation shader  
 * A geometry shader to deform the sphere with a cubemap heightmap
@@ -18,33 +18,33 @@ This Sample contains:
 * A bloom shader 
 * An anti-aliasing fxaa shader
 
-**Notes:**
+**Notes:**  
 I could not calculate normals in the geometry shader with the cubemap projection. I should use 6 2d textures insted of cube map lookups but I had no time to try it
-A good link explaining this issue:
+A good link explaining this issue:  
 https://gamedev.stackexchange.com/questions/66642/tangent-on-generated-sphere
 
-The tessellation can be manually modified:
-KEY_LEFT : mInnerLevel--
-KEY_RIGHT : mInnerLevel++
-KEY_DOWN : mOuterLevel--
-KEY_UP : mOuterLevel++
+The tessellation can be manually modified:  
+KEY_LEFT : mInnerLevel--  
+KEY_RIGHT : mInnerLevel++  
+KEY_DOWN : mOuterLevel--  
+KEY_UP : mOuterLevel++  
 
-The height factor can be also manually modified:
-KEY_m : + 0.05
-KEY_n : - 0.05
+The height factor can be also manually modified:  
+KEY_m : + 0.05  
+KEY_n : - 0.05  
 
-**Links cubesphere:**
-https://arm-software.github.io/opengl-es-sdk-for-android/tessellation.html
-https://www.iquilezles.org/www/articles/patchedsphere/patchedsphere.htm
-http://www.songho.ca/opengl/gl_sphere.html#example_cubesphere
+**Links cubesphere:**  
+https://arm-software.github.io/opengl-es-sdk-for-android/tessellation.html  
+https://www.iquilezles.org/www/articles/patchedsphere/patchedsphere.htm  
+http://www.songho.ca/opengl/gl_sphere.html#example_cubesphere  
 
-**links tessellation:**
-https://ogldev.org/www/tutorial30/tutorial30.html
-https://stackoverflow.com/questions/24166446/glsl-tessellation-displacement-mapping
-https://community.khronos.org/t/computing-the-tangent-space-in-the-fragment-shader/52861
+**links tessellation:**  
+https://ogldev.org/www/tutorial30/tutorial30.html  
+https://stackoverflow.com/questions/24166446/glsl-tessellation-displacement-mapping  
+https://community.khronos.org/t/computing-the-tangent-space-in-the-fragment-shader/52861   
 
-**Link bloom:**
-https://learnopengl.com/Advanced-Lighting/Bloom
+**Link bloom:**  
+https://learnopengl.com/Advanced-Lighting/Bloom  
 
 ----------------------------------------------------------------------------------
 
