@@ -4,7 +4,7 @@
 
 This code is intended for use with the Cinder C++ library: http://libcinder.org (coded with Cinder v0.9.1)
 
-Demo videos:
+**Demo videos:**
 
 https://youtu.be/IT7WLxrKGlQ
 
@@ -18,7 +18,7 @@ This Sample contains:
 * A bloom shader 
 * An anti-aliasing fxaa shader
 
-Notes:
+**Notes:**
 I could not calculate normals in the geometry shader with the cubemap projection. I should use 6 2d textures insted of cube map lookups but I had no time to try it
 A good link explaining this issue:
 https://gamedev.stackexchange.com/questions/66642/tangent-on-generated-sphere
@@ -33,17 +33,17 @@ The height factor can be also manually modified:
 KEY_m : + 0.05
 KEY_n : - 0.05
 
-Links cubesphere:
+**Links cubesphere:**
 https://arm-software.github.io/opengl-es-sdk-for-android/tessellation.html
 https://www.iquilezles.org/www/articles/patchedsphere/patchedsphere.htm
 http://www.songho.ca/opengl/gl_sphere.html#example_cubesphere
 
-links tessellation:
+**links tessellation:**
 https://ogldev.org/www/tutorial30/tutorial30.html
 https://stackoverflow.com/questions/24166446/glsl-tessellation-displacement-mapping
 https://community.khronos.org/t/computing-the-tangent-space-in-the-fragment-shader/52861
 
-Link bloom:
+**Link bloom:**
 https://learnopengl.com/Advanced-Lighting/Bloom
 
 ----------------------------------------------------------------------------------
