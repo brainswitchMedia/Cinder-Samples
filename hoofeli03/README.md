@@ -1,20 +1,18 @@
-# A Cube Sphere ( Spherified Cube ) tessellated and deformed with a cubemap texture
+# A Deformed tetrahedron with audio reactive particles
 
-![deformedSphereMapping](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/CubeSphereDisplacementMapping/picreadme.jpg)
+![hoofeli03](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/hoofeli03/picreadme.jpg)
 
 This code is intended for use with the Cinder C++ library: http://libcinder.org (coded with Cinder v0.9.1)
 
 **Demo videos:**  
 https://www.youtube.com/watch?v=_bvhPYaTeR4 
 
-
 **This Sample contains:**  
 * A instancied particle shader
 * A fxaa shader  
 * A god rays shader ( light squattering )
 * A hdr shader
-* A bloom shader 
-* An anti-aliasing fxaa shader
+* A bloom shader
 
 **Link bloom:**  
 https://fabiensanglard.net/lightScattering/
