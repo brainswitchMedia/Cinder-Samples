@@ -5,7 +5,7 @@
 This code is intended for use with the Cinder C++ library: http://libcinder.org (coded with Cinder v0.9.1)
 
 **Demo videos:**  
-https://www.youtube.com/watch?v=_bvhPYaTeR4 
+https://www.instagram.com/p/CfnA15gqoC6/
 
 **This Sample contains:**  
 * A custon illumination shader
