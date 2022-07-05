@@ -46,7 +46,7 @@ class self_illuminated_TranslucencyApp : public App {
     gl::GlslProgRef mIlluminationShader, mFxaaShader;
     
     int mCurrentFrame = 0;
-    bool mSaveScreen = true;
+    bool mSaveScreen = false;
     std::string mKeyPressed;
     
     params::InterfaceGlRef mParams;
