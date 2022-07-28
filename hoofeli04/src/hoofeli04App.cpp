@@ -99,7 +99,6 @@ private:
     // Pyramids buffers
     static const int            numPyramids = numSpheres/2; // sub 4
     gl::BatchRef                mPyramids[ numPyramids ];
-    std::vector<ci::vec3>       mPyramidsPositions;
     cinder::gl::VboMeshRef      mVboMeshPyramids;
     std::vector<uint16_t>       mIndicesPyramids;
     std::vector<ci::vec3>       mPosCoordsPyramids;
@@ -127,7 +126,7 @@ private:
     // GLSL & Rendering
     gl::BatchRef                mBatchGodRays, mBatchTrailRect, mBatchBloomRect, mBatchToScreenRect, mBatchHdrRect, mBatchFxaaRect;
     
-    gl::GlslProgRef             mWireframeShader, mTrailShader, mPhongShader, mGodRaysShader, mBloomShader, mHdrShader, mFxaaShader;
+    gl::GlslProgRef             mWireframeShader, mTrailShader, mGodRaysShader, mBloomShader, mHdrShader, mFxaaShader;
     bool                        mEnableFaceFulling;
     
     // FBO
@@ -1262,13 +1261,6 @@ void hoofeli04App::saveImage()
 
 void hoofeli04App::loadShaders()
 {
-    try {
-        mPhongShader = gl::GlslProg::create( loadAsset( "phong.vert" ), loadAsset( "phong.frag" ) );
-    }
-    catch( Exception &exc ) {
-        CI_LOG_E( "error loading Phong shader: " << exc.what() );
-    }
-    
     try {
         mTrailShader = gl::GlslProg::create( loadAsset( "pass_through.vert" ), loadAsset( "color.frag" ) );
     }
