@@ -99,15 +99,10 @@ private:
     // Pyramids buffers
     static const int            numPyramids = numSpheres/2; // sub 4
     gl::BatchRef                mPyramids[ numPyramids ];
+
     cinder::gl::VboMeshRef      mVboMeshPyramids;
-    std::vector<uint16_t>       mIndicesPyramids;
-    std::vector<ci::vec3>       mPosCoordsPyramids;
-    std::vector<ci::vec3>       mNormalsPyramids;
-    std::vector<ci::vec3>       mTangentsPyramids;
-    std::vector<ci::vec2>       mTexCoordsPyramids;
 
     // Spheres buffers
-    gl::BatchRef                mSpheres[ numSpheres ];
     std::vector<SphereParticle> mParticlesPositions;
     std::vector<ci::vec3>       mSpheresPositions;
     std::vector<ci::vec3>       mSpheresLights, mSpheresLightsInitialPositions;
@@ -126,7 +121,7 @@ private:
     // GLSL & Rendering
     gl::BatchRef                mBatchGodRays, mBatchTrailRect, mBatchBloomRect, mBatchToScreenRect, mBatchHdrRect, mBatchFxaaRect;
     
-    gl::GlslProgRef             mWireframeShader, mTrailShader, mGodRaysShader, mBloomShader, mHdrShader, mFxaaShader;
+    gl::GlslProgRef             mWireframeShader, mTrailShader, mPhongShader, mGodRaysShader, mBloomShader, mHdrShader, mFxaaShader;
     bool                        mEnableFaceFulling;
     
     // FBO
@@ -306,12 +301,12 @@ void hoofeli04App::createPrimitivesPositionsFromCube()
 
 gl::VboMeshRef hoofeli04App::createPrimitivePyramidFromPoints( vec3 point1, vec3 point2, vec3 point3, vec3 point4, bool cavity )
 {
-    mPosCoordsPyramids.clear();
-    mIndicesPyramids.clear();
-    mTexCoordsPyramids.clear();
-    mNormalsPyramids.clear();
-    mTangentsPyramids.clear();
-    
+    std::vector<uint16_t>   mIndicesPyramids;
+    std::vector<ci::vec3>   mPosCoordsPyramids;
+    std::vector<ci::vec3>   mNormalsPyramids;
+    std::vector<ci::vec3>   mTangentsPyramids;
+    std::vector<ci::vec2>   mTexCoordsPyramids;
+
     // Vertex
     //
     //     V2-----*         y
@@ -354,8 +349,7 @@ gl::VboMeshRef hoofeli04App::createPrimitivePyramidFromPoints( vec3 point1, vec3
     mIndicesPyramids.push_back( 3 );
     mIndicesPyramids.push_back( 2 );
     
-    
-    vec3 normal = computeTriangleNormal( point3, point4, point1 );
+    /*vec3 normal = computeTriangleNormal( point3, point4, point1 );
     mNormalsPyramids.push_back( normal );
     mNormalsPyramids.push_back( normal );
     mNormalsPyramids.push_back( normal );
@@ -368,16 +362,16 @@ gl::VboMeshRef hoofeli04App::createPrimitivePyramidFromPoints( vec3 point1, vec3
     normal = computeTriangleNormal( point2, point4, point3 );
     mNormalsPyramids.push_back( normal );
     mNormalsPyramids.push_back( normal );
-    mNormalsPyramids.push_back( normal );
+    mNormalsPyramids.push_back( normal );*/
     
     // Layout
     gl::VboMesh::Layout layout;
     layout.attrib( geom::POSITION, 3 );//.usage( GL_DYNAMIC_DRAW );
-    layout.attrib( geom::NORMAL, 3 );
+    //layout.attrib( geom::NORMAL, 3 );
     
     mVboMeshPyramids = gl::VboMesh::create( mPosCoordsPyramids.size(), GL_TRIANGLES, { layout }, mIndicesPyramids.size() );
     mVboMeshPyramids->bufferAttrib( geom::POSITION, mPosCoordsPyramids.size() * sizeof( vec3 ), mPosCoordsPyramids.data() );
-    mVboMeshPyramids->bufferAttrib( geom::NORMAL, mNormalsPyramids.size() * sizeof( vec3 ), mNormalsPyramids.data() );
+    //mVboMeshPyramids->bufferAttrib( geom::NORMAL, mNormalsPyramids.size() * sizeof( vec3 ), mNormalsPyramids.data() );
     mVboMeshPyramids->bufferIndices( mIndicesPyramids.size() * sizeof( uint16_t ), mIndicesPyramids.data() );
     
     return mVboMeshPyramids;
@@ -395,14 +389,14 @@ void hoofeli04App::setSpheresPositions( const std::vector<ci::vec3> &posCoords, 
         //mSpheresPositions.push_back( mUniquePosCoords[i] );
     }
     
-    size_t numTriangles = indices.size() / 3;
+    size_t numSpheres = indices.size() / 3;
     
     vec3 cubeCorner0 = mUnitCube[1]; // -> face 0 = ( mUnitCube[2], mUnitCube[0], mUnitCube[5] )
     vec3 cubeCorner1 = mUnitCube[3]; // -> face 1 = ( mUnitCube[7], mUnitCube[0], mUnitCube[2] )
     vec3 cubeCorner2 = mUnitCube[4]; // -> face 2 = ( mUnitCube[0], mUnitCube[7], mUnitCube[5] )
     vec3 cubeCorner3 = mUnitCube[6]; // -> face 3 = ( mUnitCube[7], mUnitCube[2], mUnitCube[5] )
     
-    for( uint16_t i = 0; i < numTriangles; ++i ) {
+    for( uint16_t i = 0; i < numSpheres; ++i ) {
         uint16_t index0 = indices[i * 3 + 0];
         uint16_t index1 = indices[i * 3 + 1];
         uint16_t index2 = indices[i * 3 + 2];
@@ -465,6 +459,9 @@ void hoofeli04App::setPyramidsPositions( const std::vector<ci::vec3> &posCoords,
 {
     size_t numTriangles = indices.size() / 3;
     
+    console() << "num Pyramid positions : " << numTriangles << std::endl;
+
+    
     for( uint16_t i = 0; i < numTriangles; ++i ) {
         uint16_t index0 = indices[i * 3 + 0];
         uint16_t index1 = indices[i * 3 + 1];
@@ -486,7 +483,10 @@ void hoofeli04App::setPyramidsPositions( const std::vector<ci::vec3> &posCoords,
         float PyramidHeigth = 1.0f;
         if ( cavity == true ) PyramidHeigth = -0.2f;
         
-        mPyramidsPositions.push_back( triangleGravityCenter );
+        console() << "posCoords[index0] : " << posCoords[index0] << std::endl;
+        console() << "posCoords[index1] : " << posCoords[index1] << std::endl;
+        console() << "posCoords[index2] : " << posCoords[index2] << std::endl;
+
         mPyramids[i] = gl::Batch::create( createPrimitivePyramidFromPoints( posCoords[index0], posCoords[index1], posCoords[index2], triangleGravityCenter + PyramidHeigth * computeTriangleNormal( v0, v1, v2 ) * pyramidHeigth, cavity ), mWireframeShader );
         //mPyramids[i] = gl::Batch::create( createPrimitivePyramidFromPoints( posCoords[index0], posCoords[index1], posCoords[index2], triangleGravityCenter + computeTriangleNormal( v0, v1, v2 ) * 0.02f ), mWireframeShader );
     }
@@ -554,8 +554,13 @@ void hoofeli04App::uniqueVertexsCopy( const std::vector<vec3> &vertexPositions )
 
 void hoofeli04App::subdivide( int mSubdivision )
 {
+    int subCounter = 0;
+    
     for( int j = 0; j < mSubdivision; ++j ) {
+        
         const size_t numTriangles = mIndices.size() / 3;
+        console() << "numTriangles subdivide: " << numTriangles << std::endl;
+
         for( uint16_t i = 0; i < numTriangles; ++i ) {
             uint16_t index0 = mIndices[i * 3 + 0];
             uint16_t index1 = mIndices[i * 3 + 1];
@@ -572,11 +577,9 @@ void hoofeli04App::subdivide( int mSubdivision )
             mIndices.push_back( index3 );
             mIndices.push_back( index1 );
             mIndices.push_back( index4 );
-            
             mIndices.push_back( index5 );
             mIndices.push_back( index3 );
             mIndices.push_back( index4 );
-            
             mIndices.push_back( index5 );
             mIndices.push_back( index4 );
             mIndices.push_back( index2 );
@@ -586,7 +589,11 @@ void hoofeli04App::subdivide( int mSubdivision )
             mPosCoords.push_back( 0.5f * ( mPosCoords[index1] + mPosCoords[index2]) );
             mPosCoords.push_back( 0.5f * ( mPosCoords[index2] + mPosCoords[index0]) );
         }
+        
+        subCounter++;
     }
+    console() << "numTriangles after subdivide: " << mIndices.size() / 3 << std::endl;
+
 }
 
 
@@ -828,25 +835,6 @@ void hoofeli04App::draw()
             gl::cullFace( GL_BACK );
             mInstanciedParticles.drawInstanced( mDistanceConverstionParticles, mParticlesBrightness, mLightPowerParticle, mParticlesTranslulencyPower, mTexturingMode, mCounter_1 );
         }
-
-        /*{
-   
-            
-            int numSpheresToDraw = mSpheresPositions.size();
-            //console() << " numSpheresToDraw " << numSpheresToDraw << std::endl;
-            
-            for( int s = 0; s < numSpheresToDraw; ++s )
-            {
-                gl::ScopedTextureBind scopedTextureBind( mTextureStripes );
-                mPhongShader->uniform( "uTexturingMode", mTexturingMode );
-                mPhongShader->uniform( "uBrightness", mParticlesBrightness );
-                mPhongShader->uniform( "uLightPosition", mSpheresLights[s] );
-                gl::pushModelMatrix();
-                gl::translate( mSpheresPositions[s] );
-                mSpheres[s]->draw();
-                gl::popModelMatrix();
-            }
-        }*/
         
         {
             gl::ScopedTextureBind scopedTextureBind( mTextureGradiant );
@@ -866,6 +854,7 @@ void hoofeli04App::draw()
             gl::ScopedFaceCulling cullScope( true, GL_BACK );
             for( int p = 0; p < numPyramids; ++p )
             {
+                console() << "mPyramids[p]: " << mPyramids[p] << std::endl;
                 mWireframeShader->uniform( "uLightPosition", mSpheresLights[p] );
                 mWireframeShader->uniform( "uLightModelView", mReactiveCam.getViewMatrix() * vec4( 0.0, 0.0, 0.0, 1.0 ) );
                 // For the back we need less attenuation
@@ -1194,13 +1183,6 @@ void hoofeli04App::resize()
 
 void hoofeli04App::createGeometry()
 {
-    int numSpheresToDraw = mSpheresPositions.size();
-    
-    for( int i = 0; i < numSpheresToDraw; ++i ) {
-        auto sphere = geom::Sphere().radius( 0.025f ).subdivisions( 20 );
-        mSpheres[i] = gl::Batch::create( sphere, mPhongShader );
-    }
-    
     gl::VboMeshRef  rect = gl::VboMesh::create( geom::Rect() );
     
     // Fade texture
