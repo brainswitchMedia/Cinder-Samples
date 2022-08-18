@@ -1,6 +1,6 @@
 # A Deformed tetrahedron with audio reactive particles
 
-![hoofeli03](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/dithering/picreadme.jpg)
+![dithering](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/dithering/picreadme.jpg)
 
 This code is intended for use with the Cinder C++ library: http://libcinder.org (coded with Cinder v0.9.1)
 
