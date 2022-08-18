@@ -1,4 +1,4 @@
-# A Deformed tetrahedron with audio reactive particles
+# Blue Noise Dithering shader
 
 ![Dithering](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/Dithering/picreadme.jpg)
 
@@ -13,10 +13,12 @@ https://www.youtube.com/watch?v=a_PAilV1kbo
 
 **Links:**  
 Blue noise:
+
 https://observablehq.com/@jobleonard/pseudo-blue-noise
 https://www.shadertoy.com/view/wl3XWs
 
 Pixel Art Upscaling:
+
 https://csantosbh.wordpress.com/2014/01/25/manual-texture-filtering-for-pixelated-games-in-webgl/
 https://csantosbh.wordpress.com/2014/02/05/automatically-detecting-the-texture-filter-threshold-for-pixelated-magnifications/
 
