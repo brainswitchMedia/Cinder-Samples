@@ -14,7 +14,7 @@ This code is intended for use with the Cinder C++ library: http://libcinder.org 
 * VBO Tube managment classes
 
 **How to use it:**  
-You can see the normals or the sithering effect by commenting/uncommentig the lines at the end off the TubeApp.cpp draw() methods 
+You can chose to see normals or the dithering effect by commenting / uncommentig lines at the end of the TubeApp.cpp draw() method 
 
 
 ----------------------------------------------------------------------------------
