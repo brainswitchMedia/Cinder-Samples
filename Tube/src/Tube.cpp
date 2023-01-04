@@ -810,7 +810,8 @@ void Tube::computeProfileCorrectionTab()
         for( int i = 0; i <= (int)easeValues; ++i )
         {
             float ease = easeOutExpo( (float)i / easeValues );
-            mProfileEaseOutExpoCorrectionVal[i] = ease;
+            // mProfileEaseOutExpoCorrectionVal[i] must be != 0, because of calculation normal
+            mProfileEaseOutExpoCorrectionVal[i] = ease + 0.01f;
         }
     }
 }
