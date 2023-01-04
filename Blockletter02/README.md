@@ -5,7 +5,7 @@
 This code is intended for use with the Cinder C++ library: http://libcinder.org (coded with Cinder v0.9.1)
 
 **Demo videos:**  
-https://youtu.be/MToN8_XmZU8 
+ https://youtu.be/i4G1P6Oo1Ic
 
 **This Sample contains:**  
 * A fxaa shader  
