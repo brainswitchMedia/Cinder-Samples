@@ -1,6 +1,6 @@
 # A Tetrahedron with transparency
 
-![hoofeli03](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/hoofeli03/Blockletter01)
+![hoofeli03](https://github.com/brainswitchMedia/Cinder-Samples/blob/master/Blockletter01/picreadme.jpg)
 
 This code is intended for use with the Cinder C++ library: http://libcinder.org (coded with Cinder v0.9.1)
 
